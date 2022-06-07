@@ -5,20 +5,19 @@ import time
 import cv2
 
 
-class Camera:
-    def __init__(self):
+class RtspStream:
+    def __init__(self, rtsp_stream_url):
         self.thread = None
         self.current_frame  = None
         self.last_access = None
         self.is_running: bool = False
-        self.camera = cv2.VideoCapture(0)
-        if not self.camera.isOpened():
-            raise Exception("Could not open video device")
-        self.camera.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-        self.camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        self.rtsp_stream_url = rtsp_stream_url
+        self.stream = cv2.VideoCapture(rtsp_stream_url)
+        if not self.stream.isOpened():
+            raise Exception("Could not open rtsp stream url {0}".format(rtsp_stream_url))
 
     def __del__(self):
-        self.camera.release()
+        self.stream.release()
 
     def start(self):
         if self.thread is None:
@@ -39,7 +38,7 @@ class Camera:
         self.last_access = time.time()
         while self.is_running:
             time.sleep(0.1)
-            ret, frame = self.camera.read()
+            ret, frame = self.stream.read()
             if ret:
                 ret, encoded = cv2.imencode(".jpg", frame)
                 if ret:
