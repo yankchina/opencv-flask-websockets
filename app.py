@@ -5,25 +5,22 @@ from flask_socketio import SocketIO, emit
 import base64
 from rtspstream import RtspStream
 
+
 stream = RtspStream("rtsp://wowzaec2demo.streamlock.net/vod/mp4:BigBuckBunny_115k.mp4")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@socketio.on('my event')
-def test_message(message):
-    emit('my response', {'data': message['data']})
     
 # socket.emit('request frame',{});  -> ME
 # ME -> socket.on('redraw frame', function (msg) {});
 @socketio.on('request frame')
 def redraw(message):
-    print('request frame')
     frame = stream.get_frame()
     if frame is not None:
         emit('redraw frame',{

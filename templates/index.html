@@ -24,7 +24,7 @@
             });
             socket.on('redraw frame', function (message) {
                 console.log('redraw frame', message);
-                $('#stream-frame').attr('src',`data:image/jpeg;base64,${message.base64}`);
+                $('#stream-frame').attr('src',`data:image/png;base64,${message.base64}`);
             });
             socket.on('empty frame', message => {
                 console.log('empty frame');
@@ -36,7 +36,7 @@
         });
     </script>
 </head>
-<img id="stream-frame" width="640" height="480">
+<img id="stream-frame" width="1024" height="768">
 <div id="log"></div>
 
 <body>

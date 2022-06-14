@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 import threading
 import time
-
 import cv2
+from yolov5 import YOLOv5
+
+yolov5_model_path = u'./models/yolov5n.pt'
+model = YOLOv5(model_path=yolov5_model_path,device="cpu")
 
 class RtspStream:
     def __init__(self, rtsp_stream_url):
@@ -35,7 +38,9 @@ class RtspStream:
         if cap.isOpened():
             ret, frame = cap.read()
             if ret:
-                ret, encoded = cv2.imencode(".jpg",frame)
+                results = model.predict(frame)
+                results.render()
+                ret, encoded = cv2.imencode(".png",frame)
                 if ret:
                     frame = encoded
                     print("END ENCODED")
@@ -54,6 +59,7 @@ class RtspStream:
             ret, frame = self.stream.read()
             if ret:
                 # print("Capture OK!")
+                results = model.predict(frame)
                 ret, encoded = cv2.imencode(".jpg", frame)
                 if ret:
                     # print("Frame Encoding", encoded)
