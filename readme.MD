@@ -1,12 +1,16 @@
-Requirements
-=============
-- python3-opencv
-- python3-flask
-- python3-eventlet
-- python3-flask-socketio
+2022-06-14
 
-Get them from your package manager or from pip, on Fedora 30 I got everythign except flask-socketio from `dnf`
+测试如何用 Flask 来实现一个 Websocket 工具
 
-I ran this on a Raspberry Pi 2 with the camera module V2.
+https://blog.miguelgrinberg.com/post/easy-websockets-with-flask-and-gevent
 
-To run as a limtited user just make sure to put your user in the `video` group so it can access the camera.
+最终完成了这个工作，能够用 Python Flask + Flask SocketIO 来进行 Websocket 传输与分析
+
+后面要做的工作
+
+- 在真实的 RTSPStream 上做测试
+- 增加一个 GUI 配置页面，方便进行系统启动
+- 能在本地摄像头与 RTSPStream 中进行切换
+- 能装载不同的 Yolo 模型
+
+----

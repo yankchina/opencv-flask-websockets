@@ -4,15 +4,16 @@ import time
 
 import cv2
 
-
 class RtspStream:
     def __init__(self, rtsp_stream_url):
+        print('rtspstream')
         self.thread = None
         self.current_frame  = None
         self.last_access = None
         self.is_running: bool = False
         self.rtsp_stream_url = rtsp_stream_url
-        self.stream = cv2.VideoCapture(rtsp_stream_url)
+        # self.stream = cv2.VideoCapture(rtsp_stream_url)
+        self.stream = cv2.VideoCapture(0)
         if not self.stream.isOpened():
             raise Exception("Could not open rtsp stream url {0}".format(rtsp_stream_url))
 
@@ -24,9 +25,21 @@ class RtspStream:
             self.thread = threading.Thread(target=self._capture)
             self.thread.start()
 
+    # def get_frame(self):
+    #     self.last_access = time.time()
+    #     return self.current_frame
+    
     def get_frame(self):
-        self.last_access = time.time()
-        return self.current_frame
+        cap = cv2.VideoCapture(0)
+        frame = None
+        if cap.isOpened():
+            ret, frame = cap.read()
+            if ret:
+                ret, encoded = cv2.imencode(".jpg",frame)
+                if ret:
+                    frame = encoded
+                    print("END ENCODED")
+        return frame
 
     def stop(self):
         self.is_running = False
@@ -40,8 +53,10 @@ class RtspStream:
             time.sleep(0.1)
             ret, frame = self.stream.read()
             if ret:
+                # print("Capture OK!")
                 ret, encoded = cv2.imencode(".jpg", frame)
                 if ret:
+                    # print("Frame Encoding", encoded)
                     self.current_frame = encoded
                 else:
                     print("Failed to encode frame")

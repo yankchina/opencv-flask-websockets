@@ -1,4 +1,4 @@
 #!/bin/bash -e
-python --version
+python3 --version
 cd ./src
-python app.py
+python3 app.py
