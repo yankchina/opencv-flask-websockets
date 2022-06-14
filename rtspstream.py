@@ -43,7 +43,6 @@ class RtspStream:
         self.is_running = True
         self.last_access = time.time()
         while self.is_running:
-            time.sleep(0.1)
             ret, frame = self.stream.read()
             if ret:
                 results = self.model.predict(frame)
